@@ -4,6 +4,7 @@ import "../styles/scss/main.scss";
 
 import { useState } from "react";
 import Dummy from "./Dummy";
+import Solution from "./SolutionLetters";
 
 function App() {
   const [numberOfErrors, setNumberOfErrors] = useState(0);
@@ -42,23 +43,7 @@ function App() {
       <Header />
       <main className="main">
         <section>
-          <div className="solution">
-            <h2 className="title">Solución:</h2>
-
-            <ul className="letters">
-              {renderSolutionLetters()}
-              {/* //<li className="labeletter"></li>
-              <li className="letter"></li>
-              <li className="letter"></li>
-              <li className="letter"></li>
-              <li className="letter"></li>
-              <li className="letter"></li>
-              <li className="letter"></li>
-              <li className="letter"></li>
-              <li className="letter"></li>
-             <li className="letter"></li>// */}
-            </ul>
-          </div>
+          <Solution renderSolutionLetters={renderSolutionLetters} />
           <div className="error">
             <h2 className="title">Letras falladas:</h2>
             <ul className="letters">
