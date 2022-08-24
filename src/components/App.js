@@ -2,9 +2,10 @@ import Header from "./Header";
 import React from "react";
 import "../styles/scss/main.scss";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dummy from "./Dummy";
 import Solution from "./SolutionLetters";
+import getWordFromApi from "../services/api";
 
 function App() {
   const [numberOfErrors, setNumberOfErrors] = useState(0);
@@ -12,14 +13,19 @@ function App() {
     event.preventDefault();
     setNumberOfErrors(numberOfErrors + 1);
   };
-
+  useEffect(() => {
+    getWordFromApi().then((word) => {
+      setWord(word);
+    });
+  }, []);
   const [lastLetter, setLetter] = useState("");
   const [warningMsj, setwarnigMsj] = useState("");
   const [word, setWord] = useState("katakroker");
   const [letters, setLetters] = useState("");
 
-  const wordLetters = word.split("");
   const renderSolutionLetters = () => {
+    const wordLetters = word.split("");
+
     return wordLetters.map((letters) => {
       return <li className="letter"></li>;
     });
