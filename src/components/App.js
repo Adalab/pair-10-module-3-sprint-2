@@ -1,11 +1,14 @@
 import Header from "./Header";
 import React from "react";
 import "../styles/scss/main.scss";
+import { Route } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import Dummy from "./Dummy";
 import Solution from "./SolutionLetters";
 import getWordFromApi from "../services/api";
+import Form from "./Form";
+import Footer from "./Footer";
 
 function App() {
   const [numberOfErrors, setNumberOfErrors] = useState(0);
@@ -18,29 +21,45 @@ function App() {
       setWord(word);
     });
   }, []);
-  const [lastLetter, setLetter] = useState("");
+  
   const [warningMsj, setwarnigMsj] = useState("");
   const [word, setWord] = useState("katakroker");
-  const [letters, setLetters] = useState("");
+  const [letters, setLastLetters] = useState("");
+  const [userLetters, setUserLetters] = useState([]);
+  const [lastLetter, setLastLetter] = useState('');
 
   const renderSolutionLetters = () => {
-    const wordLetters = word.split("");
-
-    return wordLetters.map((letters) => {
-      return <li className="letter"></li>;
+    const wordLetters = word.split('');
+    return wordLetters.map((letter, index) => {
+      const exists = userLetters.includes(letter.toLocaleLowerCase());
+      return (
+        <li key={index} className='letter'>
+          {exists ? letter : ''}
+        </li>
+      );
     });
   };
+
+  const handleLastLetter = (value) => {
+    value = value.toLocaleLowerCase();
+    setLastLetter(value);
+
+    if (!userLetters.includes(value)) {
+      userLetters.push(value);
+      setUserLetters([...userLetters]);
+    }
+  };
   //  const handleCounter = (event) => {
-  //   setLetter(event.target.value);
+  //   setLastLetter(event.target.value);
   const handleInput = (event) => {
     const inputValue = event.currentTarget.value;
     const valided = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü]{1}$/;
     if (valided.test(inputValue)) {
-      setLetter(inputValue);
+      setLastLetter(inputValue);
       setwarnigMsj("");
       // Hay que añadir más código pra que cuente las las letras
     } else {
-      setLetter("");
+      setLastLetter("");
       setwarnigMsj("Debes introducir una letra válida");
     }
   };
@@ -60,26 +79,16 @@ function App() {
               <li className="letter">x</li>
             </ul>
           </div>
-          <form className="form">
-            <label className="title" htmlFor="last-letter">
-              Escribe una letra:
-            </label>
-            <input
-              autocomplete="off"
-              className="form__input"
-              maxlength="1"
-              type="text"
-              name="lastLetter"
-              id="lastLetterr"
-              value={lastLetter}
-              onChange={handleInput}
-            />
-            <p> {warningMsj} </p>
-            <button onClick={handleIncrease}>Incrementar</button>
-          </form>
+         <Form 
+         lastLetter = {lastLetter}
+         handleInput = {handleInput}
+         warningMsj = {warningMsj}
+         handleIncrease = {handleIncrease}
+         />
         </section>
         <Dummy error={numberOfErrors} />
       </main>
+      <Footer/>
     </div>
   );
 }
